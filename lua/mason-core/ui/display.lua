@@ -174,7 +174,7 @@ M._render_node = render_node
 ---@param viewport integer
 local function calc_size(size, viewport)
     if size <= 1 then
-        return math.ceil(size * viewport)
+        return math.floor(size * viewport)
     end
     return math.min(size, viewport)
 end
@@ -200,6 +200,11 @@ local function create_popup_window_opts(opts, sizes_only)
 
     if not sizes_only then
         popup_layout.border = opts.border
+    end
+
+    if popup_layout.border ~= "none" then
+        popup_layout.row = popup_layout.row - 1
+        popup_layout.col = popup_layout.col - 1
     end
 
     return popup_layout
