@@ -196,6 +196,8 @@ local function create_popup_window_opts(opts, sizes_only)
         relative = "editor",
         style = "minimal",
         zindex = 45,
+        title = settings.current.ui.title,
+        title_pos = settings.current.ui.title and settings.current.ui.title_pos or nil,
     }
 
     if not sizes_only then

@@ -11,13 +11,6 @@ return function(state)
         Ui.CascadingStyleNode({ "CENTERED" }, {
             Ui.HlTextNode {
                 Ui.When(state.view.is_showing_help, {
-                    p.header_secondary(" " .. state.header.title_prefix .. " mason.nvim "),
-                    p.none((" "):rep(#state.header.title_prefix + 1)),
-                }, {
-                    p.header " mason.nvim ",
-                    state.view.is_searching and p.Comment " (search mode, press <Esc> to clear)" or p.none "",
-                }),
-                Ui.When(state.view.is_showing_help, {
                     p.none "        press ",
                     p.highlight_secondary(settings.current.ui.keymaps.toggle_help),
                     p.none " for package list",
