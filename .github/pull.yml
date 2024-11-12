@@ -2,4 +2,4 @@ version: "1"
 rules:
   - base: main
     upstream: williamboman:main
-    mergeMethod: merge
+    mergeMethod: rebase
