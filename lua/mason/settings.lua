@@ -78,6 +78,10 @@ local DEFAULT_SETTINGS = {
         -- Defaults to `:h 'winborder'` if nil.
         border = nil,
 
+        -- The title displayed in the UI window. When the border is visible, this is shown as the
+        -- border title via |nvim_open_win()|. Otherwise, it is rendered inside the content buffer.
+        title = " mason.nvim ",
+
         ---@since 1.11.0
         -- The backdrop opacity. 0 is fully opaque, 100 is fully transparent.
         backdrop = 60,

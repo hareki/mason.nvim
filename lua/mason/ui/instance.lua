@@ -747,6 +747,7 @@ end
 window.init {
     effects = effects,
     border = border,
+    title = settings.current.ui.title,
     winhighlight = {
         "NormalFloat:MasonNormal",
     },

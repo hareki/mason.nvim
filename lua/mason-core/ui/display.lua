@@ -168,7 +168,7 @@ end
 -- exported for tests
 M._render_node = render_node
 
----@alias WindowOpts { effects?: table<string, fun()>, winhighlight?: string[], border?: string|table }
+---@alias WindowOpts { effects?: table<string, fun()>, winhighlight?: string[], border?: string|table, title?: string }
 
 ---@param size number
 ---@param viewport integer
@@ -185,7 +185,8 @@ local function create_popup_window_opts(opts, sizes_only)
     local width = calc_size(settings.current.ui.width, columns)
     local row = math.floor((lines - height) / 2)
     local col = math.floor((columns - width) / 2)
-    if opts.border ~= "none" and opts.border ~= "" then
+    local has_border = opts.border ~= "none" and opts.border ~= ""
+    if has_border then
         row = math.max(row - 1, 0)
         col = math.max(col - 1, 0)
     end
@@ -202,6 +203,10 @@ local function create_popup_window_opts(opts, sizes_only)
 
     if not sizes_only then
         popup_layout.border = opts.border
+        if has_border and opts.title then
+            popup_layout.title = opts.title
+            popup_layout.title_pos = "center"
+        end
     end
 
     return popup_layout
