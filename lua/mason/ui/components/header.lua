@@ -1,36 +1,39 @@
 local Ui = require "mason-core.ui"
 local _ = require "mason-core.functional"
+local ext = require "mason.ui.components.header_ext"
 local p = require "mason.ui.palette"
 local settings = require "mason.settings"
-local version = require "mason.version"
 
 ---@param state InstallerUiState
 return function(state)
     local uninstalled_registries = _.filter(_.prop_eq("is_installed", false), state.info.registries)
+    local title = settings.current.ui.title
+    local show_title_in_buffer = not ext.has_visible_border()
+
+    local header_rows = {}
+    if show_title_in_buffer then
+        header_rows[#header_rows + 1] = Ui.When(state.view.is_showing_help, {
+            p.header_secondary(" " .. state.header.title_prefix .. " " .. title .. " "),
+            p.none((" "):rep(#state.header.title_prefix + 1)),
+        }, {
+            p.header(" " .. title .. " "),
+            state.view.is_searching and p.Comment " (search mode, press <Esc> to clear)" or p.none "",
+        })
+    end
+    header_rows[#header_rows + 1] = Ui.When(state.view.is_showing_help, {
+        p.none "        press ",
+        p.highlight_secondary(settings.current.ui.keymaps.toggle_help),
+        p.none " for package list",
+    }, {
+        p.none "press ",
+        p.highlight(settings.current.ui.keymaps.toggle_help),
+        p.none " for help",
+    })
+    header_rows[#header_rows + 1] = { p.Comment "https://github.com/mason-org/mason.nvim" }
 
     return Ui.Node {
         Ui.CascadingStyleNode({ "CENTERED" }, {
-            Ui.HlTextNode {
-                Ui.When(state.view.is_showing_help, {
-                    p.header_secondary(" " .. state.header.title_prefix .. " mason.nvim "),
-                    p.header_secondary(version.VERSION .. " "),
-                    p.none((" "):rep(#state.header.title_prefix + 1)),
-                }, {
-                    p.header " mason.nvim ",
-                    p.header(version.VERSION .. " "),
-                    state.view.is_searching and p.Comment " (search mode, press <Esc> to clear)" or p.none "",
-                }),
-                Ui.When(state.view.is_showing_help, {
-                    p.none "        press ",
-                    p.highlight_secondary(settings.current.ui.keymaps.toggle_help),
-                    p.none " for package list",
-                }, {
-                    p.none "press ",
-                    p.highlight(settings.current.ui.keymaps.toggle_help),
-                    p.none " for help",
-                }),
-                { p.Comment "https://github.com/mason-org/mason.nvim" },
-            },
+            Ui.HlTextNode(header_rows),
         }),
         Ui.When(not state.info.registry_update.in_progress and #uninstalled_registries > 0, function()
             return Ui.CascadingStyleNode({ "INDENT" }, {
